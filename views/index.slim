@@ -1,0 +1,15 @@
+center
+  h1 Ceasar Cipher
+  h3 by Roberto Pando
+form method="POST" action="/"
+  input type="hidden" name="_method" value="PUT"
+  label for="message" Write a Message:
+  br
+  textarea#message name="message"
+  br
+  label for="shift" # of shifts:
+  br
+  input#shift type="number" min="1" max="25" name="shift" value="#{@encrypt.shift unless @encrypt == nil}"
+  br
+  input type="submit" value="Encrypt"
+h4= @encrypt.ceasar_cipher unless @encrypt == nil
