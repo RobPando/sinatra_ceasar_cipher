@@ -4,16 +4,11 @@ require 'slim'
 
 # Tool to encrypt the message.
 class CeasarCipher
-  attr_writer :message, :shift
+  attr_reader :message, :shift
 
   def initialize(message = '', shift = 0)
     @message = message
     @shift = shift
-  end
-
-  def ceasar_cipher
-    encrypted = message.split(' ').collect { |word| encrypted_it(word) }.join(' ')
-    encrypted
   end
 
   def up_case_alph
@@ -28,21 +23,32 @@ class CeasarCipher
     down_case_alph + up_case_alph
   end
 
-  def encrypted_it(word)
-    word.split('').collect { |c| shift_it(c) }.join
+  def ceasar_cipher
+    message.split(' ').collect { |word| encrypt(word) }.join(' ')
   end
 
-  def shift_it(char)
-    if alphabet.include?(char)
-      char = alphabet.index(char)
-      char += shift
-      char -= down_case_alph.count if down_case_alph.include?(down_case_alph[char]) && char > down_case_alph.count
-      char = (char - alphabet.count) + down_case_alph.count if char > alphabet.count  
+  def encrypt(word)
+    word.split('').collect { |c| shifting(c) }.join
+  end
 
-      char = alphabet[char]
-    else
-      char
-    end
+  def shifting(char)
+    alphabet.include?(char) ? shift_process(char) : char
+  end
+
+  def shift_process(char)
+    char = alphabet.index(char)
+    char += shift
+    char -= down_case_alph.count if upcased?(char)
+    char = fix_shift(char) if char > alphabet.count
+    alphabet[char]
+  end
+
+  def fix_shift(char)
+    (char - alphabet.count) + down_case_alph.count
+  end
+
+  def upcased?(char)
+    down_case_alph.include?(down_case_alph[char]) && char > down_case_alph.count
   end
 end
 
@@ -58,7 +64,3 @@ end
 not_found do
   slim :not_found
 end
-
-
-
-
